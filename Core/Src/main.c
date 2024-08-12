@@ -275,7 +275,7 @@ void MX_USB_PCD_Init(void)
 
   /* USER CODE END USB_Init 1 */
   hpcd_USB_FS.Instance = USB;
-  hpcd_USB_FS.Init.dev_endpoints = 8;
+  hpcd_USB_FS.Init.dev_endpoints = 10;
   hpcd_USB_FS.Init.speed = PCD_SPEED_FULL;
   hpcd_USB_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
   hpcd_USB_FS.Init.Sof_enable = DISABLE;
