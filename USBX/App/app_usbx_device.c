@@ -277,16 +277,16 @@ VOID USBX_APP_Device_Init(VOID)
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
   /* USER CODE BEGIN EndPoint_Configuration */
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x00 , PCD_SNG_BUF, 0x14);
+
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x80 , PCD_SNG_BUF, 0x54);
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x81, PCD_SNG_BUF, 0x94);
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x01, PCD_SNG_BUF, 0xD4);
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x82, PCD_SNG_BUF, 0x114);
 
   HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x02 , PCD_SNG_BUF, 0x154);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x82 , PCD_SNG_BUF, 0x194);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x83, PCD_SNG_BUF, 0x1D4);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x03, PCD_SNG_BUF, 0x214);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x84, PCD_SNG_BUF, 0x254);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x83, PCD_SNG_BUF, 0x194);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x03, PCD_SNG_BUF, 0x1D4);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x84, PCD_SNG_BUF, 0x214);
   /* USER CODE END EndPoint_Configuration */
   /* USER CODE END USB_Device_Init_PreTreatment_1 */
 
