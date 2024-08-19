@@ -123,6 +123,8 @@ VOID USBD_CDC2_ACM_ParameterChange(VOID *cdc_acm_instance)
 	return;
 }
 
+static UCHAR UserRxBufferFS[100];
+
 VOID usbx_cdc_acm_write_thread_entry(ULONG thread_input)
 {
 
@@ -144,16 +146,26 @@ VOID usbx_cdc_acm_write_thread_entry(ULONG thread_input)
 	{
 		if ((device->ux_slave_device_state == UX_DEVICE_CONFIGURED) && (cdc_acm != UX_NULL))
 		{
+
+			ux_device_class_cdc_acm_read(cdc_acm, (UCHAR *)UserRxBufferFS, 64,
+							 &actual_length);
+
+			if (actual_length == 0)
+			{
+				continue;
+			}
+
+			uint32_t rxLen = actual_length;
+
 			cdc_acm_buffer[index] = counter;
 
-			ux_device_class_cdc_acm_write(cdc_acm, (UCHAR *)(&cdc_acm_buffer[0]), buffsize, &actual_length);
+			ux_device_class_cdc_acm_write(cdc_acm, (UCHAR *)(&UserRxBufferFS[0]), rxLen, &actual_length);
 
 			if(counter == 57)
 				counter = 48;
 			else
 				counter++;
 		}
-		ux_utility_thread_sleep(20);
 	}
 }
 
@@ -188,7 +200,7 @@ VOID usbx_cdc2_acm_write_thread_entry(ULONG thread_input)
 				counter++;
 		}
 
-		ux_utility_thread_sleep(20);
+		ux_utility_thread_sleep(2);
 	}
 }
 /* USER CODE END 1 */
