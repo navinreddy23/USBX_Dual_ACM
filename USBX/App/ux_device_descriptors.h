@@ -5,9 +5,9 @@
   * @author  MCD Application Team
   * @brief   USBX Device descriptor header file
   ******************************************************************************
-  * @attention
+    * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -39,7 +39,7 @@ extern "C" {
 #define USBD_MAX_NUM_CONFIGURATION                     1U
 #define USBD_MAX_SUPPORTED_CLASS                       3U
 #define USBD_MAX_CLASS_ENDPOINTS                       9U
-#define USBD_MAX_CLASS_INTERFACES                      12U
+#define USBD_MAX_CLASS_INTERFACES                      11U
 
 #define USBD_CDC_ACM_CLASS_ACTIVATED                   1U
 
@@ -47,12 +47,11 @@ extern "C" {
 #define USBD_COMPOSITE_USE_IAD                         1U
 #define USBD_DEVICE_FRAMEWORK_BUILDER_ENABLED          1U
 
-#define USBD_FRAMEWORK_MAX_DESC_SZ                     400U
+#define USBD_FRAMEWORK_MAX_DESC_SZ                     200U
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 
 /* USER CODE END ET */
-
 /* Enum Class Type */
 typedef enum
 {
@@ -62,11 +61,11 @@ typedef enum
   CLASS_TYPE_MSC      = 3,
   CLASS_TYPE_CDC_ECM  = 4,
   CLASS_TYPE_DFU      = 5,
-  CLASS_TYPE_VIDEO    = 6,
-  CLASS_TYPE_PIMA_MTP = 7,
-  CLASS_TYPE_CCID     = 8,
-  CLASS_TYPE_PRINTER  = 9,
-  CLASS_TYPE_RNDIS    = 10,
+  CLASS_TYPE_PIMA_MTP = 6,
+  CLASS_TYPE_RNDIS    = 7,
+  CLASS_TYPE_VIDEO    = 8,
+  CLASS_TYPE_CCID     = 9,
+  CLASS_TYPE_PRINTER  = 10,
 } USBD_CompositeClassTypeDef;
 
 /* USB Endpoint handle structure */
@@ -245,11 +244,6 @@ typedef struct
 
 #endif /* (USBD_CDC_ACM_CLASS_ACTIVATED == 1) || (USBD_RNDIS_CLASS_ACTIVATED == 1)  || (USBD_CDC_ECM_CLASS_ACTIVATED == 1)*/
 
-/* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private_defines */
-
-/* USER CODE END Private_defines */
-
 /* Exported functions prototypes ---------------------------------------------*/
 /* USER CODE BEGIN EFP */
 
@@ -263,15 +257,18 @@ uint16_t USBD_Get_Configuration_Number(uint8_t class_type, uint8_t interface_typ
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private_defines */
-
+#define CLASS_TYPE_CDC2_ACM							  11U
+#define USBD_CDCACM2_EPINCMD_ADDR                     0x84U
+#define USBD_CDCACM2_EPIN_ADDR                        0x83U
+#define USBD_CDCACM2_EPOUT_ADDR                       0x03U
 /* USER CODE END Private_defines */
 
 #define USBD_VID                                      1155
-#define USBD_PID                                      22336
+#define USBD_PID                                      22288
 #define USBD_LANGID_STRING                            1033
 #define USBD_MANUFACTURER_STRING                      "STMicroelectronics"
-#define USBD_PRODUCT_STRING                           "STM32 Virtual ComPort"
-#define USBD_SERIAL_NUMBER                            "CDC_ACM001"
+#define USBD_PRODUCT_STRING                           "STM32 USB Device"
+#define USBD_SERIAL_NUMBER                            "000000000001"
 
 #define USB_DESC_TYPE_INTERFACE                       0x04U
 #define USB_DESC_TYPE_ENDPOINT                        0x05U
@@ -356,9 +353,6 @@ uint16_t USBD_Get_Configuration_Number(uint8_t class_type, uint8_t interface_typ
                                 pIfDesc->iInterface = (istring); \
                                 *Sze += (uint32_t)sizeof(USBD_IfDescTypedef); \
                               } while(0)
-
-
-
 #ifdef __cplusplus
 }
 #endif

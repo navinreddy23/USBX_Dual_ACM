@@ -5,9 +5,9 @@
   * @author  MCD Application Team
   * @brief   USBX Device descriptor header file
   ******************************************************************************
-  * @attention
+   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -46,7 +46,6 @@ USBD_DevClassHandleTypeDef  USBD_Device_FS, USBD_Device_HS;
 
 uint8_t UserClassInstance[USBD_MAX_CLASS_INTERFACES] = {
   CLASS_TYPE_CDC_ACM,
-  CLASS_TYPE_CDC_ACM
 };
 
 /* The generic device descriptor buffer that will be filled by builder
@@ -146,8 +145,9 @@ uint8_t *USBD_Get_Device_Framework_Speed(uint8_t Speed, ULONG *Length)
 {
   uint8_t *pFrameWork = NULL;
   /* USER CODE BEGIN Device_Framework0 */
-
-  /* USER TAG BEGIN Device_Framework0 */
+  if(UserClassInstance[1] != CLASS_TYPE_CDC_ACM)
+	  UserClassInstance[1] = CLASS_TYPE_CDC2_ACM;
+  /* USER CODE END Device_Framework0 */
 
   if (USBD_FULL_SPEED == Speed)
   {
@@ -169,9 +169,9 @@ uint8_t *USBD_Get_Device_Framework_Speed(uint8_t Speed, ULONG *Length)
 
     pFrameWork = pDevFrameWorkDesc_HS;
   }
-  /* USER CODE Device_Framework1 */
+  /* USER CODE BEGIN Device_Framework1 */
 
-  /* USER CODE Device_Framework1 */
+  /* USER CODE END Device_Framework1 */
   return pFrameWork;
 }
 
@@ -186,9 +186,9 @@ uint8_t *USBD_Get_String_Framework(ULONG *Length)
   uint16_t len = 0U;
   uint8_t count = 0U;
 
-  /* USER CODE String_Framework0 */
+  /* USER CODE BEGIN String_Framework0 */
 
-  /* USER CODE String_Framework0 */
+  /* USER CODE END String_Framework0 */
 
   /* Set the Manufacturer language Id and index in USBD_string_framework */
   USBD_string_framework[count++] = USBD_LANGID_STRING & 0xFF;
@@ -216,9 +216,9 @@ uint8_t *USBD_Get_String_Framework(ULONG *Length)
   /* Set the Serial number in USBD_string_framework */
   USBD_Desc_GetString((uint8_t *)USBD_SERIAL_NUMBER, USBD_string_framework + count, &len);
 
-  /* USER CODE String_Framework1 */
+  /* USER CODE BEGIN String_Framework1 */
 
-  /* USER CODE String_Framework1 */
+  /* USER CODE END String_Framework1 */
 
   /* Get the length of USBD_string_framework */
   *Length = strlen((const char *)USBD_string_framework);
@@ -260,7 +260,7 @@ uint16_t USBD_Get_Interface_Number(uint8_t class_type, uint8_t interface_type)
 
   /* USER CODE BEGIN USBD_Get_Interface_Number0 */
 
-  /* USER CODE BEGIN USBD_Get_Interface_Number0 */
+  /* USER CODE END USBD_Get_Interface_Number0 */
 
   for(idx = 0; idx < USBD_MAX_SUPPORTED_CLASS; idx++)
   {
@@ -273,7 +273,7 @@ uint16_t USBD_Get_Interface_Number(uint8_t class_type, uint8_t interface_type)
 
   /* USER CODE BEGIN USBD_Get_Interface_Number1 */
 
-  /* USER CODE BEGIN USBD_Get_Interface_Number1 */
+  /* USER CODE END USBD_Get_Interface_Number1 */
 
   return itf_num;
 }
@@ -291,11 +291,11 @@ uint16_t USBD_Get_Configuration_Number(uint8_t class_type, uint8_t interface_typ
 
   /* USER CODE BEGIN USBD_Get_CONFIGURATION_Number0 */
 
-  /* USER CODE BEGIN USBD_Get_CONFIGURATION_Number0 */
+  /* USER CODE END USBD_Get_CONFIGURATION_Number0 */
 
   /* USER CODE BEGIN USBD_Get_CONFIGURATION_Number1 */
 
-  /* USER CODE BEGIN USBD_Get_CONFIGURATION_Number1 */
+  /* USER CODE END USBD_Get_CONFIGURATION_Number1 */
 
   return cfg_num;
 }
@@ -465,6 +465,7 @@ uint8_t  USBD_FrameWork_AddClass(USBD_DevClassHandleTypeDef *pdev,
                                  uint8_t cfgidx, uint8_t Speed,
                                  uint8_t *pCmpstConfDesc)
 {
+
   if ((pdev->classId < USBD_MAX_SUPPORTED_CLASS) &&
       (pdev->tclasslist[pdev->classId].Active == 0U))
   {
@@ -498,9 +499,9 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
 {
   uint8_t interface = 0U;
 
-  /* USER CODE FrameWork_AddToConfDesc_0 */
+  /* USER CODE BEGIN FrameWork_AddToConfDesc_0 */
 
-  /* USER CODE FrameWork_AddToConfDesc_0 */
+  /* USER CODE END FrameWork_AddToConfDesc_0 */
 
   /* The USB drivers do not set the speed value, so set it here before starting */
   pdev->Speed = Speed;
@@ -521,7 +522,6 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
 
       /* Find the first available interface slot and Assign number of interfaces */
       interface = USBD_FrameWork_FindFreeIFNbr(pdev);
-      pdev->tclasslist[pdev->classId].InterfaceType = interface;
       pdev->tclasslist[pdev->classId].NumIf = 2U;
       pdev->tclasslist[pdev->classId].Ifs[0] = interface;
       pdev->tclasslist[pdev->classId].Ifs[1] = (uint8_t)(interface + 1U);
@@ -565,15 +565,57 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
       break;
 
 #endif /* USBD_CDC_ACM_CLASS_ACTIVATED */
+    /* USER CODE BEGIN FrameWork_AddToConfDesc_1 */
+    case CLASS_TYPE_CDC2_ACM:
+    	/* Find the first available interface slot and Assign number of interfaces */
+    	interface = USBD_FrameWork_FindFreeIFNbr(pdev);
+    	pdev->tclasslist[pdev->classId].NumIf = 2U;
+    	pdev->tclasslist[pdev->classId].Ifs[0] = interface;
+    	pdev->tclasslist[pdev->classId].Ifs[1] = (uint8_t)(interface + 1U);
 
-    /* USER CODE FrameWork_AddToConfDesc_1 */
+    	/* Assign endpoint numbers */
+    	pdev->tclasslist[pdev->classId].NumEps = 3U;  /* EP_IN, EP_OUT, CMD_EP */
 
-    /* USER CODE FrameWork_AddToConfDesc_1 */
+    	/* Check the current speed to assign endpoints */
+    	if (Speed == USBD_HIGH_SPEED)
+    	{
+    		/* Assign OUT Endpoint */
+    		USBD_FrameWork_AssignEp(pdev, USBD_CDCACM2_EPOUT_ADDR,
+    				USBD_EP_TYPE_BULK, USBD_CDCACM_EPOUT_HS_MPS);
+
+    		/* Assign IN Endpoint */
+    		USBD_FrameWork_AssignEp(pdev, USBD_CDCACM2_EPIN_ADDR,
+    				USBD_EP_TYPE_BULK, USBD_CDCACM_EPIN_HS_MPS);
+
+    		/* Assign CMD Endpoint */
+    		USBD_FrameWork_AssignEp(pdev, USBD_CDCACM2_EPINCMD_ADDR,
+    				USBD_EP_TYPE_INTR, USBD_CDCACM_EPINCMD_HS_MPS);
+    	}
+    	else
+    	{
+    		/* Assign OUT Endpoint */
+    		USBD_FrameWork_AssignEp(pdev, USBD_CDCACM2_EPOUT_ADDR,
+    				USBD_EP_TYPE_BULK, USBD_CDCACM_EPOUT_FS_MPS);
+
+    		/* Assign IN Endpoint */
+    		USBD_FrameWork_AssignEp(pdev, USBD_CDCACM2_EPIN_ADDR,
+    				USBD_EP_TYPE_BULK, USBD_CDCACM_EPIN_FS_MPS);
+
+    		/* Assign CMD Endpoint */
+    		USBD_FrameWork_AssignEp(pdev, USBD_CDCACM2_EPINCMD_ADDR,
+    				USBD_EP_TYPE_INTR, USBD_CDCACM_EPINCMD_FS_MPS);
+    	}
+
+    	/* Configure and Append the Descriptor */
+    	USBD_FrameWork_CDCDesc(pdev, (uint32_t)pCmpstConfDesc, &pdev->CurrConfDescSz);
+
+    	break;
+    /* USER CODE END FrameWork_AddToConfDesc_1 */
 
     default:
-      /* USER CODE FrameWork_AddToConfDesc_2 */
+      /* USER CODE BEGIN FrameWork_AddToConfDesc_2 */
 
-      /* USER CODE FrameWork_AddToConfDesc_2 */
+      /* USER CODE END FrameWork_AddToConfDesc_2 */
       break;
   }
 
@@ -651,8 +693,7 @@ static void  USBD_FrameWork_AssignEp(USBD_DevClassHandleTypeDef *pdev,
   }
 
   /* Configure the endpoint */
-  uint8_t address = Add + pdev->tclasslist[pdev->classId].InterfaceType;
-  pdev->tclasslist[pdev->classId].Eps[idx].add = address;
+  pdev->tclasslist[pdev->classId].Eps[idx].add = Add;
   pdev->tclasslist[pdev->classId].Eps[idx].type = Type;
   pdev->tclasslist[pdev->classId].Eps[idx].size = (uint16_t) Sze;
   pdev->tclasslist[pdev->classId].Eps[idx].is_used = 1U;

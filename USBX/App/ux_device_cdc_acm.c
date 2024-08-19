@@ -259,50 +259,6 @@ VOID USBD_CDC_ACM_Activate2(VOID *cdc_acm_instance)
   /* Save the CDC instance */
   cdc_acm2 = (UX_SLAVE_CLASS_CDC_ACM*) cdc_acm_instance;
 
-  /* Configure the UART peripheral */
-  // USBX_APP_UART_Init(&uart_handler);
-
-  /* Get default UART parameters */
-  CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_baudrate = uart_handler->Init.BaudRate;
-
-  /* Set the UART data type : only 8bits and 9bits are supported */
-  switch (uart_handler->Init.WordLength)
-  {
-    case UART_WORDLENGTH_8B:
-    {
-      /* Set UART data bit to 8 */
-      CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_data_bit = VCP_WORDLENGTH8;
-      break;
-    }
-
-    case UART_WORDLENGTH_9B:
-    {
-      /* Set UART data bit to 9 */
-      CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_data_bit = VCP_WORDLENGTH9;
-      break;
-    }
-
-    default :
-    {
-      /* By default set UART data bit to 8 */
-      CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_data_bit = VCP_WORDLENGTH8;
-      break;
-    }
-  }
-
-  /* Get UART Parity */
-  CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_parity = uart_handler->Init.Parity;
-
-  /* Get UART StopBits */
-  CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_stop_bit = uart_handler->Init.StopBits;
-
-  /* Set device class_cdc_acm with default parameters */
-  if (ux_device_class_cdc_acm_ioctl(cdc_acm2, UX_SLAVE_CLASS_CDC_ACM_IOCTL_SET_LINE_CODING,
-                                    &CDC_VCP_LineCoding) != UX_SUCCESS)
-  {
-    Error_Handler();
-  }
-
   /* Receive an amount of data in interrupt mode */
   /* USER CODE END USBD_CDC_ACM_Activate */
 
@@ -337,66 +293,6 @@ VOID USBD_CDC_ACM_Deactivate2(VOID *cdc_acm_instance)
   */
 VOID USBD_CDC_ACM_ParameterChange2(VOID *cdc_acm_instance)
 {
-  // /* USER CODE BEGIN USBD_CDC_ACM_ParameterChange */
-  // UX_PARAMETER_NOT_USED(cdc_acm_instance);
-  //
-  // ULONG request;
-  // UX_SLAVE_TRANSFER *transfer_request;
-  // UX_SLAVE_DEVICE *device;
-  //
-  // /* Get the pointer to the device */
-  // device = &_ux_system_slave -> ux_system_slave_device;
-  //
-  // /* Get the pointer to the transfer request associated with the control endpoint */
-  // transfer_request = &device -> ux_slave_device_control_endpoint.ux_slave_endpoint_transfer_request;
-  //
-  // request = *(transfer_request -> ux_slave_transfer_request_setup + UX_SETUP_REQUEST);
-  //
-  // switch (request)
-  // {
-  //   case UX_SLAVE_CLASS_CDC_ACM_SET_LINE_CODING :
-  //
-  //     /* Get the Line Coding parameters */
-  //     if (ux_device_class_cdc_acm_ioctl(cdc_acm2, UX_SLAVE_CLASS_CDC_ACM_IOCTL_GET_LINE_CODING,
-  //                                       &CDC_VCP_LineCoding) != UX_SUCCESS)
-  //     {
-  //       Error_Handler();
-  //     }
-  //
-  //     /* Check if baudrate < 9600) then set it to 9600 */
-  //     if (CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_baudrate < MIN_BAUDRATE)
-  //     {
-  //       CDC_VCP_LineCoding.ux_slave_class_cdc_acm_parameter_baudrate = MIN_BAUDRATE;
-  //
-  //       /* Set the new configuration of ComPort */
-  //       USBD_CDC_VCP_Config(&CDC_VCP_LineCoding);
-  //     }
-  //     else
-  //     {
-  //       /* Set the new configuration of ComPort */
-  //       USBD_CDC_VCP_Config(&CDC_VCP_LineCoding);
-  //     }
-  //
-  //     break;
-  //
-  //   case UX_SLAVE_CLASS_CDC_ACM_GET_LINE_CODING :
-  //
-  //     /* Set the Line Coding parameters */
-  //     if (ux_device_class_cdc_acm_ioctl(cdc_acm2, UX_SLAVE_CLASS_CDC_ACM_IOCTL_SET_LINE_CODING,
-  //                                       &CDC_VCP_LineCoding) != UX_SUCCESS)
-  //     {
-  //       Error_Handler();
-  //     }
-  //
-  //     break;
-  //
-  //   case UX_SLAVE_CLASS_CDC_ACM_SET_CONTROL_LINE_STATE :
-  //   default :
-  //     break;
-  // }
-
-  /* USER CODE END USBD_CDC_ACM_ParameterChange */
-
   return;
 }
 //------------------------------------------------------------------------------

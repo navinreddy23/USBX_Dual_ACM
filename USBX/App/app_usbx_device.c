@@ -150,7 +150,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
 
 
   /* Initialize the device cdc acm class */
-  if (ux_device_stack_class_register(_ux_system_slave_class_cdc_acm_name,
+  if (ux_device_stack_class_register("ACM1",
                                      ux_device_class_cdc_acm_entry,
                                      cdc_acm_configuration_number,
                                      0,
@@ -161,20 +161,23 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
     /* USER CODE END USBX_DEVICE_CDC_ACM_REGISTER_ERORR */
   }
 
-  cdc_acm_interface_number = USBD_Get_Interface_Number(CLASS_TYPE_CDC_ACM, 1);
+  cdc_acm_configuration_number = USBD_Get_Configuration_Number(CLASS_TYPE_CDC2_ACM, 0);
+
+  /* Find cdc acm interface number */
+  cdc_acm_interface_number = USBD_Get_Interface_Number(CLASS_TYPE_CDC2_ACM, 0);
 
   cdc_acm_parameter2.ux_slave_class_cdc_acm_instance_activate   = USBD_CDC_ACM_Activate2;
   cdc_acm_parameter2.ux_slave_class_cdc_acm_instance_deactivate = USBD_CDC_ACM_Deactivate2;
   cdc_acm_parameter2.ux_slave_class_cdc_acm_parameter_change    = USBD_CDC_ACM_ParameterChange2;
 
-  uint32_t code;
-  if ( code = ux_device_stack_class_register("ACM2",
-                                   ux_device_class_cdc_acm_entry,
-                                   cdc_acm_configuration_number,
-                                   cdc_acm_interface_number,
-                                   &cdc_acm_parameter2) != UX_SUCCESS )
+  uint32_t ret_code;
+  if ( (ret_code = ux_device_stack_class_register("ACM2",
+                                              ux_device_class_cdc_acm_entry,
+                                              cdc_acm_configuration_number,
+                                              cdc_acm_interface_number,
+                                              &cdc_acm_parameter2) != UX_SUCCESS) )
   {
-    UNUSED(code);
+    UNUSED(ret_code);
     /* USER CODE BEGIN USBX_DEVICE_CDC_ACM_REGISTER_ERORR */
     return UX_ERROR;
     /* USER CODE END USBX_DEVICE_CDC_ACM_REGISTER_ERORR */
@@ -276,17 +279,14 @@ VOID USBX_APP_Device_Init(VOID)
 
   /* USER CODE BEGIN USB_Device_Init_PreTreatment_1 */
   /* USER CODE BEGIN EndPoint_Configuration */
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x00 , PCD_SNG_BUF, 0x14);
-
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x80 , PCD_SNG_BUF, 0x54);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x81, PCD_SNG_BUF, 0x94);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x01, PCD_SNG_BUF, 0xD4);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x82, PCD_SNG_BUF, 0x114);
-
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x02 , PCD_SNG_BUF, 0x154);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x83, PCD_SNG_BUF, 0x194);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x03, PCD_SNG_BUF, 0x1D4);
-  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x84, PCD_SNG_BUF, 0x214);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x00, PCD_SNG_BUF, 0x40);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x80, PCD_SNG_BUF, 0x80);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x81, PCD_SNG_BUF, 0xC0);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x01, PCD_SNG_BUF, 0x100);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x82, PCD_SNG_BUF, 0x140);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x83, PCD_SNG_BUF, 0x180);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x03, PCD_SNG_BUF, 0x1C0);
+  HAL_PCDEx_PMAConfig(&hpcd_USB_FS, 0x84, PCD_SNG_BUF, 0x200);
   /* USER CODE END EndPoint_Configuration */
   /* USER CODE END USB_Device_Init_PreTreatment_1 */
 
